@@ -15,9 +15,13 @@ Use the following command: `npm i mysql2@2.2.5`.
 
 A user can create and update an friends, thoughts, and reactions using Insomnia or Postman. 
 
-The following is a video of the application. [Click here for link to video](https://drive.google.com/file/d/1wVoEW6QsdpW_zXdfhPfUSrRQk2ZHBsC6/view)
+The following is a video of the user routes. [Click here for link to video](https://drive.google.com/file/d/1BMsiSuRUM1hiSabYUIhfnv4A50QshEG8/view)
 
-![Video of application](/assets/SQL-Employee-Tracker-Demo.gif)
+![Video of user routes](/assets/user%20routes%20demo.gif)
+
+The following is a video of the thought routes. [Click here for link to video](https://drive.google.com/file/d/1FPEP62NH6BCKcgLU86tyhljxkY6_EWuO/view)
+
+![Video of thought routes](/assets/thought%20routes%20demo.gif)
 
 ## License
 
