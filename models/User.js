@@ -17,23 +17,28 @@ const userSchema = new Schema(
       unique: true,
       validate: {
         validator: () => Promise.resolve(false),
-        message: 'Email validation failed'
-      }
+        message: "Email validation failed",
+      },
     },
     thoughts: [thoughtSchema],
     friends: [userSchema],
   },
   {
     toJSON: {
-      getters: true,
+      virtuals: true,
     },
+    id: false,
   }
 );
 
-const User = db.model('User', userSchema);
+userSchema.virtual("friendCount").get(() => {
+  return this.friends.length;
+});
+
+const User = model("User", userSchema);
 const user = new User();
 
-user.email = 'test@test.co';
+user.email = "test@test.co";
 
 let error;
 try {
@@ -42,8 +47,6 @@ try {
   error = err;
 }
 assert.ok(error);
-assert.equal(error.errors['email'].message, 'Email validation failed');
+assert.equal(error.errors["email"].message, "Email validation failed");
 
-const Student = model("student", studentSchema);
-
-module.exports = Student;
+module.exports = User;
