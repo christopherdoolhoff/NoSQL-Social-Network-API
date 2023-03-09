@@ -15,13 +15,20 @@ const userSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      validate: {
-        validator: () => Promise.resolve(false),
-        message: "Email validation failed",
-      },
+      match: /.+\@.+\..+/,
     },
-    thoughts: [thoughtSchema],
-    friends: [userSchema],
+    thoughts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Thought",
+      },
+    ],
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     toJSON: {
@@ -31,22 +38,10 @@ const userSchema = new Schema(
   }
 );
 
-userSchema.virtual("friendCount").get(() => {
+userSchema.virtual('friendCount').get(function () {
   return this.friends.length;
 });
 
-const User = model("User", userSchema);
-const user = new User();
-
-user.email = "test@test.co";
-
-let error;
-try {
-  await user.validate();
-} catch (err) {
-  error = err;
-}
-assert.ok(error);
-assert.equal(error.errors["email"].message, "Email validation failed");
+const User = model("user", userSchema);
 
 module.exports = User;

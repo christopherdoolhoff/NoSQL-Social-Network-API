@@ -14,14 +14,6 @@ module.exports = {
   // Get user by id
   getUser(req, res) {
     User.findOne({ _id: req.params.userId })
-      .populate({
-        path: "thoughts",
-        select: "-__v",
-      })
-      .populate({
-        path: "friends",
-        select: "-__v",
-      })
       .then((user) =>
         !user
           ? res.status(404).json({ message: "No user with that ID" })
@@ -67,36 +59,36 @@ module.exports = {
   },
 
   //   add a friend
-  addFriend(req, res) {
-    console.log("You are adding friend");
-    console.log(req.body);
+  addFriend({ params }, res) {
     User.findOneAndUpdate(
-      { _id: req.params.UserId },
-      { $addToSet: { friends: req.body } },
-      { runValidators: true, new: true }
+      { _id: params.userId },
+      { $push: { friends: params.friendId } },
+      { new: true }
     )
-      .then((user) =>
-        !user
-          ? res.status(404).json({ message: "No user found with that ID :(" })
-          : res.json(user)
-      )
-      .catch((err) => res.status(500).json(err));
+      .then((user) => {
+        if (!user) {
+          res.status(404).json({ message: 'No user found with this id' });
+          return;
+        }
+        res.json(user);
+      })
+      .catch((err) => res.status(400).json(err));
   },
 
   //   Delete friend
-  deleteFriend(req, res) {
+  deleteFriend({ params }, res) {
     User.findOneAndUpdate(
-      { _id: req.params.userId },
-      { $pull: { friends: { friendId: req.params.friendId } } },
-      { runValidators: true, new: true }
+      { _id: params.userId },
+      { $pull: { friends: params.friendId } },
+      { new: true }
     )
-      .then((user) =>
-        !user
-          ? res
-              .status(404)
-              .json({ message: "No user found with that ID :(" })
-          : res.json(user)
-      )
-      .catch((err) => res.status(500).json(err));
-  },
+      .then((user) => {
+        if (!user) {
+          res.status(404).json({ message: 'No user found with this id' });
+          return;
+        }
+        res.json(user);
+      })
+      .catch((err) => res.status(400).json(err));
+  }
 };
